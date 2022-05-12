@@ -1,0 +1,91 @@
+#include <iostream>
+ 
+class Node
+{
+public:
+    Node() : _next(nullptr){}
+    Node(unsigned const num) : _num(num), _next(nullptr){}
+    friend class List;
+private:
+    Node* _next;
+    unsigned _num;
+};
+ 
+class List
+{
+public:
+    List() : _root(nullptr){}
+    void add(unsigned const num)
+    {
+        if (_root == nullptr)
+        {
+            _root = new Node(num);
+        }
+        else
+        {
+            Node* tmp = _root;
+            while (tmp->_next != nullptr)
+            {
+                tmp = tmp->_next;
+            }
+            tmp->_next = new Node(num);
+        }
+    }
+    void addAfter(unsigned const num, unsigned const afterThis)
+    {
+        Node* tmp = _root;
+        while (tmp)
+        {
+            if (tmp->_num == afterThis)
+            {
+                Node* node = new Node(num);
+                if (tmp->_next == nullptr)
+                {
+                    tmp->_next = node;
+                }
+                else
+                {
+                    node->_next = tmp->_next;
+                    tmp->_next = node;
+                }
+                tmp = node;
+            }
+            tmp = tmp->_next;
+        }
+    }
+    void print() const
+    {
+        Node* tmp = _root;
+        while (tmp)
+        {
+            std::cout << tmp->_num << "  ";
+            tmp = tmp->_next;
+        }
+    }
+    ~List()
+    {
+        while (_root)
+        {
+            Node* tmp = _root;
+            _root = _root->_next;
+            //std::cout << "\ndelete " << tmp->_num;
+            delete tmp;
+            tmp = nullptr;
+        }
+    }
+private:
+    Node* _root;
+};
+ 
+int main()
+{
+    List lst;
+    lst.add(5);
+    lst.add(12);
+    lst.add(5);
+    unsigned N = 12, M = 5;
+    lst.addAfter(N, M);
+    N = 12, M = 12;
+    lst.addAfter(N, M);
+    lst.print();
+}
